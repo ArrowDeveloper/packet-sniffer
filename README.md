@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Packet Sniffer
 
 This repository contains a packet sniffer built using socket and struct in python. This is currently made for only Linux OS.
@@ -22,3 +23,7 @@ This tool is intended **for educational purposes only**.
 Only scan systems that you own or have explicit permission to test.
 
 ---
+=======
+# packet-sniffer
+Still sluggish but working on it.
+>>>>>>> c13dd3715d9ebc8d51919363dd070a7a981bbde5
