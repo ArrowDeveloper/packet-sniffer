@@ -16,7 +16,7 @@ print(f"PACKET SNIFFER RUNNING AT {target_iface}...")
 while True:
     raw_bytes, addr = sock.recvfrom(65535)
     headers = raw_bytes[:14]
-    dest_mac, src_mac, proto = struct.unpack('!6s6sH', headers) #6s for 6
+    dest_mac, src_mac, proto = struct.unpack('!6s6sH', headers) #6s for 6 bytes
 
     if proto == 0x0800: #Only accepting IPv4
 
@@ -75,23 +75,30 @@ while True:
 
                 if anscount > 0:
                     if udp_payload[offset] & 0xC0 == 0xC0:
+
                         offset += 2
                         atype, aclass, ttl,rdlength = struct.unpack("!HHIH", udp_payload[offset:offset+10])
                         offset += 10
+                        print("RDLENGTH:",rdlength)
                         rdata = udp_payload[offset: offset+rdlength]
 
                         if atype == 1 and rdlength == 4:
                             ipv4addr = ".".join(map(str, rdata))
                             print("ANSWER IPV4", "TYPE:", atype, "CLASS:", aclass, "TTL:", ttl, "IP:", ipv4addr)
+
                         elif atype == 28 and rdlength == 16:
                             groups = []
                             for i in range(0,16,2):
                                 group = rdata[i:i+2]
                                 groups.append(group.hex())
-                            ipv6addr = ":".join(groups)
+                    
+                            ipv6addr = ipaddress.IPv6Address(":".join(groups))
+                            
                             print("ANSWER IPV6", "TYPE:", atype, "CLASS:", aclass, "TTL:", ttl, "IP:", ipv6addr)
                         else:
                             print("ANSWER", "TYPE:", atype, "CLASS:", aclass, "TTL:", ttl, "RDATA", rdata)
+
+
         
                 if is_response:
                     print("RESPONSE","ID:", dns_id, domain, qtype_text, qclass_text)
