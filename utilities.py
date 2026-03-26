@@ -2,6 +2,7 @@ import fcntl
 import array
 import socket
 import struct
+import ipaddress
 
 def get_active_interface():
     #Creating a Dummy socket to connect to
